@@ -1,6 +1,9 @@
 package it.furno.umberto.controller;
 
+import java.util.ArrayList;
+
 import it.furno.umberto.database.DAO;
+import it.furno.umberto.model.Pezzo;
 
 public class Controller {
 	
@@ -27,6 +30,11 @@ public class Controller {
 		return trovato;
 	}
 	
+	public ArrayList<Pezzo> getListaPezzi() {
+		ArrayList<Pezzo> pezzi = new ArrayList<Pezzo>();
+		pezzi= dao.trovaPezzi();
+		return pezzi;
+	}
 
 	private DAO dao;
 }

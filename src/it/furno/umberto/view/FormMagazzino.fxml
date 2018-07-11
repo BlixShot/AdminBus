@@ -1,13 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.*?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="it.furno.umberto.controller.ControllerMagazzino">
   <!-- TODO Add Nodes -->
   <center>
-    <BorderPane prefHeight="200.0" prefWidth="200.0" />
+    <BorderPane disable="false" focusTraversable="false" prefHeight="200.0" prefWidth="-1.0">
+      <center>
+        <ListView fx:id="listQ" disable="false" editable="false" opacity="0.51" prefHeight="200.0" prefWidth="200.0" visible="true">
+          <BorderPane.margin>
+            <Insets bottom="5.0" fx:id="x1" />
+          </BorderPane.margin>
+        </ListView>
+      </center>
+      <left>
+        <ListView id="location" fx:id="listId" prefHeight="-1.0" prefWidth="200.0" translateX="4.0" BorderPane.margin="$x1" />
+      </left>
+      <right>
+        <ListView fx:id="listG" disable="false" opacity="0.49" prefHeight="200.0" prefWidth="200.0">
+          <BorderPane.margin>
+            <Insets bottom="5.0" right="4.0" />
+          </BorderPane.margin>
+        </ListView>
+      </right>
+      <top>
+        <HBox prefHeight="-1.0" prefWidth="-1.0">
+          <children>
+            <Label text="Nome" translateX="4.0">
+              <HBox.margin>
+                <Insets bottom="5.0" left="4.0" />
+              </HBox.margin>
+            </Label>
+            <Label text="Quantità" translateX="188.0" HBox.margin="$x1" />
+            <Label blendMode="SRC_OVER" cache="false" text="Giacenza minima" translateX="288.0" HBox.hgrow="ALWAYS">
+              <HBox.margin>
+                <Insets bottom="5.0" left="50.0" />
+              </HBox.margin>
+            </Label>
+          </children>
+        </HBox>
+      </top>
+    </BorderPane>
   </center>
+  <top>
+    <Label text="MAGAZZINO" textAlignment="CENTER">
+      <font>
+        <Font size="22.0" />
+      </font>
+      <BorderPane.margin>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+      </BorderPane.margin>
+    </Label>
+  </top>
 </BorderPane>
