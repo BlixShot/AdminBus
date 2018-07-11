@@ -31,7 +31,7 @@ public class DAO {
 			Connection conn = DriverManager.getConnection(url);
 			System.out.println("connessione aperta");
 			Statement st= conn.createStatement();
-			ResultSet rs = st.executeQuery("select* from utenti where username='" + username + "'");
+			ResultSet rs = st.executeQuery("select* from utenti where username='" + username + "' and password='" + password + "' and ruolo='" + ruolo + "'");
 			if(rs.next())
 				trovato=true;
 			else
