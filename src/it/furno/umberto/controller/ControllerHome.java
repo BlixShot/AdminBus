@@ -45,8 +45,7 @@ public class ControllerHome {
 
     @FXML
     private TextField ruolo;
-    
-    
+   
 
 
     @FXML

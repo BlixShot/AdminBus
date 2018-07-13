@@ -1,14 +1,16 @@
 package it.furno.umberto.model;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 public class Pezzo {
 	
 	
 	
 	public Pezzo(String nome, int giacenza, int giacenzaMin) {
-		super();
-		this.nome = nome;
-		this.giacenza = giacenza;
-		this.giacenzaMin = giacenzaMin;
+		this.nome = new SimpleStringProperty(nome);
+		this.giacenza = new SimpleIntegerProperty(giacenza);
+		this.giacenzaMin = new SimpleIntegerProperty( giacenzaMin);
 	}
 	
 	
@@ -16,37 +18,37 @@ public class Pezzo {
 	 * @return the nome
 	 */
 	public String getNome() {
-		return nome;
+		return nome.get();
 	}
 	/**
 	 * @param nome the nome to set
 	 */
 	public void setNome(String nome) {
-		this.nome = nome;
+		this.nome.set(nome);
 	}
 	/**
 	 * @return the giacenza
 	 */
 	public int getGiacenza() {
-		return giacenza;
+		return giacenza.get();
 	}
 	/**
 	 * @param giacenza the giacenza to set
 	 */
 	public void setGiacenza(int giacenza) {
-		this.giacenza = giacenza;
+		this.giacenza.set(giacenza);;
 	}
 	/**
 	 * @return the giacenzaMin
 	 */
 	public int getGiacenzaMin() {
-		return giacenzaMin;
+		return giacenzaMin.get();
 	}
 	/**
 	 * @param giacenzaMin the giacenzaMin to set
 	 */
 	public void setGiacenzaMin(int giacenzaMin) {
-		this.giacenzaMin = giacenzaMin;
+		this.giacenzaMin.set(giacenzaMin);
 	}
 	
 	
@@ -96,8 +98,8 @@ public class Pezzo {
 
 
 
-	private String nome;
-	private int giacenza;
-	private int giacenzaMin;
+	private final SimpleStringProperty nome;
+	private final SimpleIntegerProperty giacenza;
+	private final SimpleIntegerProperty giacenzaMin;
 
 }

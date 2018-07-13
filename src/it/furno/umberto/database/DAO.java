@@ -99,4 +99,26 @@ public class DAO {
 		}
 		
 	}
+
+	public void aggiornaGiacenza(Pezzo p, int richiesta) throws ClassNotFoundException {
+		int giacenzaAttuale = p.getGiacenza();
+		p.setGiacenza(giacenzaAttuale - richiesta);
+		int nuovaGiacenza = p.getGiacenza();
+		
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		String sql = "UPDATE pezzi SET giacenza = ? WHERE nome= ?";
+		String jdbcURL ="jdbc:mysql://localhost/dao_sql?user=root&password=&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		try {
+			Connection conn = DriverManager.getConnection(jdbcURL);
+			PreparedStatement statment = conn.prepareStatement(sql);
+			statment.setInt(1, nuovaGiacenza);
+			statment.setString(2, p.getNome());
+			int rs=statment.executeUpdate();
+			conn.close();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 }

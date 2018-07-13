@@ -2,6 +2,8 @@ package it.furno.umberto.model;
 
 import java.util.ArrayList;
 
+import javafx.beans.property.SimpleStringProperty;
+
 public class Magazzino {
 	
 	private ArrayList<Pezzo> elenco = new ArrayList<>();

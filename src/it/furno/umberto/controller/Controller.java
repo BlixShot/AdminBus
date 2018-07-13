@@ -3,6 +3,7 @@ package it.furno.umberto.controller;
 import java.util.ArrayList;
 
 import it.furno.umberto.database.DAO;
+import it.furno.umberto.model.Magazzino;
 import it.furno.umberto.model.Pezzo;
 
 public class Controller {
@@ -17,7 +18,7 @@ public class Controller {
 	
 	public Controller(){
 		dao = dao.getInstance();
-		//magazzino=magazzino.getInstance();
+		magazzino=magazzino.getInstance();
 	}
 	
 	boolean verificaCredenziali(String username, String password, String ruolo) throws ClassNotFoundException {
@@ -35,6 +36,13 @@ public class Controller {
 		pezzi= dao.trovaPezzi();
 		return pezzi;
 	}
+	
+	public void aggiornaGiacenza(String nomePezzo, int richiesta) throws ClassNotFoundException {
+		//magazzino.searchPezzoByTipo(nomePezzo);
+		Pezzo p = dao.trovaPezzo(nomePezzo);
+		dao.aggiornaGiacenza(p, richiesta);
+	}
 
 	private DAO dao;
+	private Magazzino magazzino;
 }
