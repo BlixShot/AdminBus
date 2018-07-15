@@ -14,10 +14,10 @@
       <top>
         <HBox prefHeight="-1.0" prefWidth="-1.0">
           <children>
-            <TableView fx:id="table" prefHeight="200.0" prefWidth="-1.0">
+            <TableView fx:id="table" editable="true" prefHeight="200.0" prefWidth="-1.0">
               <columns>
                 <TableColumn prefWidth="75.0" text="Nome" fx:id="nameColonna" />
-                <TableColumn prefWidth="75.0" text="Quantità" fx:id="qauntitaColonna" />
+                <TableColumn prefWidth="75.0" text="Quantità" fx:id="quantitaColonna" />
                 <TableColumn prefWidth="75.0" text="Giacenza Minima" fx:id="giacenzaColonna" />
               </columns>
               <HBox.margin>
@@ -52,12 +52,7 @@
                 </HBox>
                 <HBox prefHeight="-1.0" prefWidth="-1.0" VBox.margin="$x1">
                   <children>
-                    <Button mnemonicParsing="false" text="Ordina" />
-                    <TextField prefWidth="50.0">
-                      <HBox.margin>
-                        <Insets left="17.0" />
-                      </HBox.margin>
-                    </TextField>
+                    <Button fx:id="buttonOrdine" mnemonicParsing="false" onAction="#ordine" text="Ordina" />
                   </children>
                 </HBox>
               </children>

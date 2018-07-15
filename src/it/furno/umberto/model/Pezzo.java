@@ -92,7 +92,7 @@ public class Pezzo {
 	 */
 	@Override
 	public String toString() {
-		return "Pezzo [nome=" + nome + ", giacenza=" + giacenza + ", giacenzaMin=" + giacenzaMin + "]";
+		return "\nPezzo [nome=" + nome + ", giacenza=" + giacenza + ", giacenzaMin=" + giacenzaMin + "]";
 	}
 
 

@@ -8,7 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import it.furno.umberto.controller.Controller;
+import it.furno.umberto.controller.Model;
+import it.furno.umberto.model.Ordine;
 import it.furno.umberto.model.Pezzo;
 
 public class DAO {
@@ -76,7 +77,7 @@ public class DAO {
 				}		
 		}
 	
-	public ArrayList<Pezzo> trovaPezzi(){
+	public ArrayList<Pezzo> getListaPezzi(){
 		ArrayList<Pezzo> pezzi = new ArrayList<>();
 		Pezzo p = null;
 		String sql = "select * from pezzi";
@@ -100,19 +101,61 @@ public class DAO {
 		
 	}
 
-	public void aggiornaGiacenza(Pezzo p, int richiesta) throws ClassNotFoundException {
-		int giacenzaAttuale = p.getGiacenza();
-		p.setGiacenza(giacenzaAttuale - richiesta);
-		int nuovaGiacenza = p.getGiacenza();
-		
+	public void aggiornaGiacenza(Pezzo p) throws ClassNotFoundException {
+		int giacenza = p.getGiacenza();
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		String sql = "UPDATE pezzi SET giacenza = ? WHERE nome= ?";
 		String jdbcURL ="jdbc:mysql://localhost/dao_sql?user=root&password=&useLegacyDatetimeCode=false&serverTimezone=UTC";
 		try {
 			Connection conn = DriverManager.getConnection(jdbcURL);
 			PreparedStatement statment = conn.prepareStatement(sql);
-			statment.setInt(1, nuovaGiacenza);
+			statment.setInt(1, giacenza);
 			statment.setString(2, p.getNome());
+			int rs=statment.executeUpdate();
+			conn.close();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	public ArrayList<Ordine> trovaOrdini() {
+		ArrayList<Ordine> ordini = new ArrayList<>();
+		Ordine o = null;
+		String sql = "select * from ordini";
+		String jdbcURL ="jdbc:mysql://localhost/dao_sql?user=root&password=&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		try {
+			Connection conn= DriverManager.getConnection(jdbcURL);
+			PreparedStatement st= conn.prepareStatement(sql);
+			ResultSet rs=st.executeQuery();
+			while(rs.next()) {
+				o = new Ordine(rs.getString("pezzo ordinato"), rs.getInt("quantità ordinata"));
+				o.setID(rs.getInt("ID"));
+				ordini.add(o);
+			}
+			
+			return ordini;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public void aggiornaListaOrdini(Ordine o) throws ClassNotFoundException {
+		String n = o.getNomePezzo();
+		int q = o.getQuantitaOrdine();
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		String sql = "INSERT INTO `dao_sql`.`ordini` (`Pezzo Ordinato`, `Quantità Ordinata`, `ID`) VALUES (?, ?, ?)";
+		String jdbcURL ="jdbc:mysql://localhost/dao_sql?user=root&password=&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		try {
+			Connection conn = DriverManager.getConnection(jdbcURL);
+			PreparedStatement statment = conn.prepareStatement(sql);
+			statment.setString(1, n);
+			statment.setInt(2, q);
+			statment.setInt(3, o.getID());
 			int rs=statment.executeUpdate();
 			conn.close();
 		}

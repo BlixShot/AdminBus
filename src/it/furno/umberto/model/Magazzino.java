@@ -6,18 +6,13 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class Magazzino {
 	
-	private ArrayList<Pezzo> elenco = new ArrayList<>();
-	private static int giacenzaMin;
-	private static Magazzino instance;
-	
-	public Magazzino(int giacenzamin) {
+	public Magazzino() {
 		this.elenco=new ArrayList<Pezzo>();
-		this.giacenzaMin=giacenzamin;
 	}
 	
 	public static Magazzino getInstance() {
 		if(instance==null)
-			instance=new Magazzino(giacenzaMin);
+			instance=new Magazzino();
 		return instance;
 	}
 
@@ -34,29 +29,17 @@ public class Magazzino {
 	public void setElenco(ArrayList<Pezzo> elenco) {
 		this.elenco = elenco;
 	}
-
-	/**
-	 * @return the giacenzaMin
-	 */
-	public static int getGiacenzaMin() {
-		return giacenzaMin;
-	}
-
-	/**
-	 * @param giacenzaMin the giacenzaMin to set
-	 */
-	public static void setGiacenzaMin(int giacenzaMin) {
-		Magazzino.giacenzaMin = giacenzaMin;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	
 	@Override
 	public String toString() {
 		return "Magazzino [elenco=" + elenco + "]";
 	}
 	
+	
+	private ArrayList<Pezzo> elenco = new ArrayList<>();
+	private static Magazzino instance;
+	
+	/**
 	public int searchPezzoByTipo(String tipo) {
 		boolean trovato=false;
 		int i=0;
@@ -71,7 +54,7 @@ public class Magazzino {
 		else
 			return 0;
 		//throw new PezzoNonPresenteException();
-	}
+	}**/
 	
 	/**public ArrayList<Pezzo> aggiornaMagazzino(Pezzo p, int quantità) {
 		int i;

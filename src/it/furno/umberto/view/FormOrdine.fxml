@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="it.furno.umberto.controller.ControllerOrdini">
+  <!-- TODO Add Nodes -->
+  <children>
+    <BorderPane layoutX="0.0" layoutY="0.0" prefHeight="-1.0" prefWidth="-1.0">
+      <bottom>
+        <HBox prefHeight="-1.0" prefWidth="-1.0">
+          <children>
+            <Label text="Iserisci pezzo da ordinare:&#10;e relativa quantita">
+              <font>
+                <Font size="18.0" />
+              </font>
+            </Label>
+            <ChoiceBox fx:id="choicePezzo" prefWidth="165.0">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Item 1" />
+                  <String fx:value="Item 2" />
+                  <String fx:value="Item 3" />
+                </FXCollections>
+              </items>
+              <HBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
+              </HBox.margin>
+            </ChoiceBox>
+            <TextField fx:id="txtQuantita" prefWidth="200.0" HBox.margin="$x2" />
+            <Button fx:id="buttonConferma" blendMode="GREEN" mnemonicParsing="false" onAction="#confermaOrdine" text="Conferma ordine">
+              <HBox.margin>
+                <Insets bottom="5.0" left="5.0" top="5.0" fx:id="x1" />
+              </HBox.margin>
+            </Button>
+          </children>
+          <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
+          </BorderPane.margin>
+        </HBox>
+      </bottom>
+      <center>
+        <TableView fx:id="tableOrdini" editable="true" prefHeight="-1.0" prefWidth="-1.0" BorderPane.alignment="TOP_CENTER">
+          <columns>
+            <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="180.0" text="ID Ordine" fx:id="colonnaID" />
+            <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="160.0" text="Pezzo ordinato" fx:id="colonnaPezzo" />
+            <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="174.0" text="Qauntita Ordinata" fx:id="colonnaQuantita" />
+          </columns>
+          <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
+          </BorderPane.margin>
+        </TableView>
+      </center>
+      <top>
+        <Label text="Tabella Ordini" textFill="RED">
+          <font>
+            <Font name="System Bold" size="23.0" />
+          </font>
+          <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
+          </BorderPane.margin>
+        </Label>
+      </top>
+    </BorderPane>
+  </children>
+  <effect>
+    <ColorAdjust />
+  </effect>
+</AnchorPane>
