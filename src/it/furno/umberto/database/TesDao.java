@@ -1,7 +1,9 @@
 package it.furno.umberto.database;
 
+import it.furno.umberto.controller.Model;
 import it.furno.umberto.model.Ordine;
 import it.furno.umberto.model.Pezzo;
+import it.furno.umberto.model.Sportello;
 
 public class TesDao {
 	public static void main(String[] args) throws ClassNotFoundException {
@@ -13,6 +15,11 @@ public class TesDao {
 		System.out.println(dao.trovaOrdini());
 		dao.aggiornaListaOrdini(new Ordine("adfg", 8));
 		
+		System.out.println(dao.getListaSportelli());
+		 m = m.getInstance();
+		 System.out.println(m.getListaSportelli());
 	}
+	
+	static Model m;
 
 }

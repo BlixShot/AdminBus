@@ -6,11 +6,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.sql.Date;
 
 import it.furno.umberto.controller.Model;
+import it.furno.umberto.model.LineaIntervento;
+import it.furno.umberto.model.LineaOrdine;
+import it.furno.umberto.model.Manutentore;
 import it.furno.umberto.model.Ordine;
 import it.furno.umberto.model.Pezzo;
+import it.furno.umberto.model.RichiestaIntervento;
+import it.furno.umberto.model.Sportello;
 
 public class DAO {
 	
@@ -50,6 +57,28 @@ public class DAO {
 			e.printStackTrace();
 		}
 		return trovato;
+		
+	}
+	
+	public ArrayList<Manutentore> getListaManutentori(){
+		ArrayList<Manutentore> manutentori= new ArrayList<>();
+		Manutentore manutentore;
+		String jdbcURL ="jdbc:mysql://localhost/dao_sql?user=root&password=&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		String sql= "select* from utenti where ruolo='manutentore'";
+		try {
+			Connection conn = DriverManager.getConnection(jdbcURL);
+			PreparedStatement statment = conn.prepareStatement(sql);
+			ResultSet rs= statment.executeQuery();
+			while(rs.next()) {
+				manutentore = new Manutentore(rs.getString("username"), rs.getString("password"));
+				manutentori.add(manutentore);
+			}
+			return manutentori;
+		}catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 		
 	}
 
@@ -164,4 +193,101 @@ public class DAO {
 		}
 		
 	}
+	
+	public ArrayList<Sportello> getListaSportelli(){
+		ArrayList<Sportello> sportelli = new ArrayList<>();
+		Sportello s = null;
+		String sql = "select * from sportelli";
+		String jdbcURL ="jdbc:mysql://localhost/dao_sql?user=root&password=&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		try {
+			Connection conn= DriverManager.getConnection(jdbcURL);
+			PreparedStatement st= conn.prepareStatement(sql);
+			ResultSet rs=st.executeQuery();
+			while(rs.next()) {
+				s = new Sportello(rs.getString("id"), rs.getString("ubicazione"), rs.getString("stato"));
+				s.setAssegnato(rs.getString("assegnato"));
+				sportelli.add(s);
+			}
+			
+			return sportelli;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public boolean aggiornaListaOrdiniNew(Ordine o) throws ClassNotFoundException {		
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		String sql = "INSERT INTO `dao_sql`.`ordini2` (`ID`) VALUES (?)";
+		String sql2= "INSERT INTO `dao_sql`.`linea ordine` (`IDOrdine`, `pezzo`, `quantita`) VALUES (?, ?, ?)";
+		String jdbcURL ="jdbc:mysql://localhost/dao_sql?user=root&password=&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		try {
+			Connection conn = DriverManager.getConnection(jdbcURL);
+			PreparedStatement statment = conn.prepareStatement(sql);
+			PreparedStatement statment2= conn.prepareStatement(sql2);
+			statment.setInt(1, o.getID());
+			int rs=statment.executeUpdate();
+			
+			for(LineaOrdine l: o.getLinea()) {
+				
+				statment2.setInt(1, l.getOrdine().getID());
+				statment2.setString(2, l.getNomePezzo());
+				statment2.setInt(3, l.getQuantita());
+				int rs2=statment2.executeUpdate();
+				//System.out.println(l);
+			}
+			conn.close();
+			return true;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public void aggiornaListaRichieste(RichiestaIntervento rs) {
+		// TODO Auto-generated method stub
+		String sql = "INSERT INTO `dao_sql`.`richieste intervento` (`Id`, `data`, `manutentore`, `stato`) VALUES (?, ? , ? , ?)";
+		String sql2= "INSERT INTO `dao_sql`.`sportelli da riparare` (`ID Rchiesta`, `ID Sportello`) VALUES ( ? , ? )";
+		String sql3 = "UPDATE `dao_sql`.`sportelli` SET `Assegnato`='true' WHERE  `ID`= ? ";
+		String jdbcURL ="jdbc:mysql://localhost/dao_sql?user=root&password=&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		try {
+			Connection conn = DriverManager.getConnection(jdbcURL);
+			PreparedStatement statment = conn.prepareStatement(sql);
+			PreparedStatement statment2= conn.prepareStatement(sql2);
+			PreparedStatement statment3= conn.prepareStatement(sql3);
+			statment.setInt(1, rs.getId());
+			statment.setString(2, java.sql.Date.valueOf(rs.getDate()).toString());
+			//System.out.println(java.sql.Date.valueOf(rs.getDate()));
+			statment.setString(3, rs.getNomeManutentore());
+			statment.setString(4, rs.getStato());
+			int resultSet = statment.executeUpdate();
+			
+			for(LineaIntervento l: rs.getLineeIntervento()) {
+				
+				statment2.setInt(1, l.getIdRichiesta());
+				statment2.setString(2, l.getIdSportello());
+				
+				int rs2=statment2.executeUpdate();
+				//System.out.println(l);
+			}
+			
+			for(LineaIntervento l: rs.getLineeIntervento()) {
+				Sportello s = l.getSportello();
+				statment3.setString(1, s.getCod());
+				int rs3= statment3.executeUpdate();
+				
+			}
+			conn.close();
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			
+		}
+	}
+	
+
 }

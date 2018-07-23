@@ -3,9 +3,15 @@ package it.furno.umberto.controller;
 import java.util.ArrayList;
 
 import it.furno.umberto.database.DAO;
+import it.furno.umberto.model.LineaIntervento;
+import it.furno.umberto.model.LineaOrdine;
 import it.furno.umberto.model.Magazzino;
+import it.furno.umberto.model.Manutentore;
 import it.furno.umberto.model.Ordine;
 import it.furno.umberto.model.Pezzo;
+import it.furno.umberto.model.RichiestaIntervento;
+import it.furno.umberto.model.Sportello;
+import javafx.collections.ObservableList;
 
 public class Model {
 	
@@ -84,9 +90,51 @@ public class Model {
 		dao.aggiornaListaOrdini(o);
 		return o;
 	}
+	
+	public Ordine effettuaOrdineNew(ArrayList<LineaOrdine> listaLinee) throws ClassNotFoundException {
+		// TODO Auto-generated method stub
+		Ordine o = new Ordine();
+		for(LineaOrdine l: listaLinee) {
+			l.setOrdine(o);
+			o.addLinea(l);
+			//System.out.println(l.getOrdine());
+		}
+		dao.aggiornaListaOrdiniNew(o);
+		//System.out.println(o);
+		return o;
+	}
+	
+	public ArrayList<Sportello> getListaSportelli() {
+		ArrayList<Sportello> sportelli = new ArrayList<Sportello>();
+		sportelli= dao.getListaSportelli();
+		return sportelli;
+	}
 
 
 	private DAO dao;
 	private Magazzino magazzino;
+	public ArrayList<Manutentore> getManutentori() {
+		ArrayList<Manutentore> m = dao.getListaManutentori();
+		return m;
+	}
+
+	public void creaRichiestaIntervento(Manutentore manutentore, ArrayList<Sportello> sportelliRip) {
+		
+		RichiestaIntervento rs= new RichiestaIntervento(manutentore);
+		
+		for(Sportello sportello: sportelliRip) {
+			sportello.setAssegnato("true");
+			LineaIntervento l1= new LineaIntervento(sportello, rs);
+			rs.addLineaIntervento(l1);
+		}
+		
+		manutentore.addIntervento(rs);
+		
+		rs.print();
+		
+		dao.aggiornaListaRichieste(rs);
+		
+		
+	}
 
 }
