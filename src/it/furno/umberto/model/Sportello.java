@@ -46,6 +46,6 @@ public class Sportello {
 
 	private final SimpleStringProperty cod;
 	private final SimpleStringProperty ubicazione;
-	private final SimpleStringProperty stato;
-	private final SimpleStringProperty assegnato;
+	private  SimpleStringProperty stato;
+	private  SimpleStringProperty assegnato;
 }

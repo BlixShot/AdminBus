@@ -110,7 +110,7 @@ public class ControllerMagazzino {
         nameColonna.setCellValueFactory(new PropertyValueFactory<>("nome"));
         quantitaColonna.setCellValueFactory(new PropertyValueFactory<>("giacenza"));
         giacenzaColonna.setCellValueFactory(new PropertyValueFactory<>("giacenzaMin"));
-        
+         buttonOrdine.setDisable(true);
         d = FXCollections.observableArrayList(lista);
         table.setItems(d);
         table.setEditable(true);

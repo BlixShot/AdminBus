@@ -167,6 +167,8 @@ public class ControllerHomeGestore {
     		alert.setHeaderText("Stato richiesta");
     		alert.setContentText("Richiesta effettuata con successo,\na video la stampa con il riepilogo");
     		alert.showAndWait();
+    		oSportelliRip.clear();
+    		sportelliRip.clear();
         }
         else {
         	Alert alert = new Alert(AlertType.WARNING);

@@ -70,6 +70,7 @@ public class ControllerHome {
     	String pass = password.getText();
     	String r = ruolo.getText();
     	
+    	
     	if(i!=0){
     		
 	    	if(usern.length()!=0 && pass.length()!=0) {
@@ -83,6 +84,9 @@ public class ControllerHome {
 	        	}
 	        	else if(trovato && choise.getValue().equals("gestore")) {
 	        		avviaHomeGestore(event);
+	        	}
+	        	else if(trovato && choise.getValue().equals("manutentore")) {
+	        		avviaHomeManutentore(event, usern);
 	        	}
 	        	else {
 	        		allertUtenteNonRegistrato();
@@ -135,7 +139,24 @@ public class ControllerHome {
                 
         System.out.println("Utente: " + username.getText() + " trovato\n");
     }
-
+    
+    public void avviaHomeManutentore(ActionEvent event, String m) throws IOException {
+    	FXMLLoader loader= new FXMLLoader(getClass().getResource("/it/furno/umberto/view/FormIntervento.fxml"));
+    	Parent home_page_parent = loader.load();
+    	ControllerIntervento c = loader.getController();
+        c.setManutentore(m);   
+        Scene home_page_scene = new Scene(home_page_parent);
+        //OK System.err.println(m);
+        Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();    
+               
+        	// app_stage.hide(); //optional
+            app_stage.setScene(home_page_scene);
+            app_stage.show();  
+                
+        System.out.println("Utente: " + username.getText() + " trovato\n");
+        app_stage.show();  
+    }
+    
     public void allertUtenteNonRegistrato() {
     	System.out.println("utente non trovato");
     	Alert alert = new Alert(AlertType.WARNING);
@@ -158,6 +179,8 @@ public class ControllerHome {
         choise.setItems(ruoli);
 
     }
+    
+
     
     private Model model;
    

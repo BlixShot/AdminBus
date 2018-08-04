@@ -11,11 +11,13 @@ import java.util.ArrayList;
 import java.sql.Date;
 
 import it.furno.umberto.controller.Model;
+import it.furno.umberto.model.Intervento;
 import it.furno.umberto.model.LineaIntervento;
 import it.furno.umberto.model.LineaOrdine;
 import it.furno.umberto.model.Manutentore;
 import it.furno.umberto.model.Ordine;
 import it.furno.umberto.model.Pezzo;
+import it.furno.umberto.model.PezzoSostituito;
 import it.furno.umberto.model.RichiestaIntervento;
 import it.furno.umberto.model.Sportello;
 
@@ -250,7 +252,7 @@ public class DAO {
 	public void aggiornaListaRichieste(RichiestaIntervento rs) {
 		// TODO Auto-generated method stub
 		String sql = "INSERT INTO `dao_sql`.`richieste intervento` (`Id`, `data`, `manutentore`, `stato`) VALUES (?, ? , ? , ?)";
-		String sql2= "INSERT INTO `dao_sql`.`sportelli da riparare` (`ID Rchiesta`, `ID Sportello`) VALUES ( ? , ? )";
+		String sql2= "INSERT INTO `dao_sql`.`sportelli da riparare` (`ID Richiesta`, `ID Sportello`) VALUES ( ? , ? )";
 		String sql3 = "UPDATE `dao_sql`.`sportelli` SET `Assegnato`='true' WHERE  `ID`= ? ";
 		String jdbcURL ="jdbc:mysql://localhost/dao_sql?user=root&password=&useLegacyDatetimeCode=false&serverTimezone=UTC";
 		try {
@@ -288,6 +290,155 @@ public class DAO {
 			
 		}
 	}
+
+	public ArrayList<RichiestaIntervento> getRichiesteInterventoManutenote(String nomeManuentore) {
+		ArrayList<RichiestaIntervento> richieste = new ArrayList<>();
+		RichiestaIntervento s = null;
+		String sql = "select * from `richieste intervento` where manutentore= ? ";
+		String jdbcURL ="jdbc:mysql://localhost/dao_sql?user=root&password=&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		try {
+			Connection conn= DriverManager.getConnection(jdbcURL);
+			PreparedStatement st= conn.prepareStatement(sql);
+			st.setString(1, nomeManuentore);
+			ResultSet rs=st.executeQuery();
+			while(rs.next()) {
+				s = new RichiestaIntervento(rs.getInt("id"), rs.getString("data"), rs.getString("stato"), rs.getString("manutentore"));
+				richieste.add(s);
+			}
+			
+			conn.close();
+			return richieste;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public ArrayList<LineaIntervento> getLineeIntervento(int id) {
+		ArrayList<LineaIntervento> linee= new ArrayList<LineaIntervento>();
+		LineaIntervento temp=null;
+		String sql = "select * from `sportelli da riparare` where `ID Richiesta`= ? ";
+		String jdbcURL ="jdbc:mysql://localhost/dao_sql?user=root&password=&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		try {
+		Connection conn= DriverManager.getConnection(jdbcURL);
+		PreparedStatement st= conn.prepareStatement(sql);
+		st.setInt(1, id);
+		ResultSet rs=st.executeQuery();
+		while(rs.next()) {
+			temp= new LineaIntervento(id, rs.getString("id sportello"), rs.getString("stato"));
+			linee.add(temp);
+		}
+		
+		return linee;
+		
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+	}
+
+	public void registraIntervento(Intervento intervento) {
+		String sql = "INSERT INTO `dao_sql`.`intervento` (`Id richiesta`, `data esecuzione`, `tipologia intervento`, `esito`) VALUES (?, ? , ? , ?)";
+		String sql2="INSERT INTO `dao_sql`.`pezzi usati` (`nome`, `quantita usata`, `id richiesta`) VALUES (?, ? ,?)";
+		String jdbcURL ="jdbc:mysql://localhost/dao_sql?user=root&password=&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		try {
+		Connection conn= DriverManager.getConnection(jdbcURL);
+		
+		PreparedStatement st= conn.prepareStatement(sql);
+		st.setInt(1, intervento.getIdRichiesta());
+		st.setString(2, java.sql.Date.valueOf(intervento.getDataEsecuzione()).toString());
+		st.setString(3, intervento.getTipologia());
+		st.setString(4, intervento.getEsito());
+		st.executeUpdate();
+		
+		PreparedStatement st2= conn.prepareStatement(sql2);
+		for(PezzoSostituito p: intervento.getPezziSostituiti()) {
+			st2.setString(1, p.getNome());
+			st2.setInt(2, p.getQuantitaUsata());
+			st2.setInt(3, intervento.getIdRichiesta());
+			st2.executeUpdate();
+		}
+		
+		
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+		
+	}
+
+	public void setRichiestaEvasa(RichiestaIntervento intervento) {
+		// Aggiorna 2 tabelle STATORICHIESTA, STATOSPORTELLO -- ASSEGNATOSPORTELLO
+		String jdbcURL ="jdbc:mysql://localhost/dao_sql?user=root&password=&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		String sql= "UPDATE `dao_sql`.`richieste intervento` SET `stato`='evasa' WHERE  `Id`=?";
+		String sql2= "UPDATE `dao_sql`.`sportelli da riparare` SET `stato`='risolto' WHERE  `ID Richiesta`=?";
+		String sql3="UPDATE `dao_sql`.`sportelli` SET `stato`='ok',  `assegnato`='false 'WHERE  `ID`=?";
+		try {
+			Connection conn = DriverManager.getConnection(jdbcURL);
+			PreparedStatement st= conn.prepareStatement(sql);
+			st.setInt(1, intervento.getId());
+			st.executeUpdate();
+			
+			PreparedStatement st2= conn.prepareStatement(sql2);
+			st2.setInt(1, intervento.getId());
+			st2.executeUpdate();
+			
+			for(LineaIntervento l: intervento.getLineeIntervento()) {
+				PreparedStatement st3= conn.prepareStatement(sql3);
+				st3.setString(1, l.getIdSportello());
+				st3.executeUpdate();
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+	public void setLineaRichiestaEvasa(ArrayList<LineaIntervento> l) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void registraInterventoNonRisolto(Intervento intervento, String motivo) {
+		// TODO Auto-generated method stub
+		
+		String sql = "INSERT INTO `dao_sql`.`intervento` (`Id richiesta`, `data esecuzione`, `tipologia intervento`, `esito`, `motivo`) VALUES (?, ? , ? , ?, ?)";
+		String sql2="INSERT INTO `dao_sql`.`pezzi usati` (`nome`, `quantita usata`, `id richiesta`) VALUES (?, ? ,?)";
+		String jdbcURL ="jdbc:mysql://localhost/dao_sql?user=root&password=&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		try {
+		Connection conn= DriverManager.getConnection(jdbcURL);
+		
+		PreparedStatement st= conn.prepareStatement(sql);
+		st.setInt(1, intervento.getIdRichiesta());
+		st.setString(2, java.sql.Date.valueOf(intervento.getDataEsecuzione()).toString());
+		st.setString(3, intervento.getTipologia());
+		st.setString(4, intervento.getEsito());
+		st.setString(5, motivo);
+		st.executeUpdate();
+		
+		PreparedStatement st2= conn.prepareStatement(sql2);
+		for(PezzoSostituito p: intervento.getPezziSostituiti()) {
+			st2.setString(1, p.getNome());
+			st2.setInt(2, p.getQuantitaUsata());
+			st2.setInt(3, intervento.getIdRichiesta());
+			st2.executeUpdate();
+		}
+		
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
 	
 
 }

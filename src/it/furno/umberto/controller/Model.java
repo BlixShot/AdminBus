@@ -1,14 +1,22 @@
 package it.furno.umberto.controller;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import it.furno.umberto.database.DAO;
+import it.furno.umberto.model.Intervento;
 import it.furno.umberto.model.LineaIntervento;
 import it.furno.umberto.model.LineaOrdine;
 import it.furno.umberto.model.Magazzino;
 import it.furno.umberto.model.Manutentore;
 import it.furno.umberto.model.Ordine;
 import it.furno.umberto.model.Pezzo;
+import it.furno.umberto.model.PezzoSostituito;
 import it.furno.umberto.model.RichiestaIntervento;
 import it.furno.umberto.model.Sportello;
 import javafx.collections.ObservableList;
@@ -113,6 +121,7 @@ public class Model {
 
 	private DAO dao;
 	private Magazzino magazzino;
+	
 	public ArrayList<Manutentore> getManutentori() {
 		ArrayList<Manutentore> m = dao.getListaManutentori();
 		return m;
@@ -137,4 +146,46 @@ public class Model {
 		
 	}
 
+	public void creaIntervento(RichiestaIntervento richiestaSelezionata, LocalDate data, String tipologia, String esito,
+			ArrayList<PezzoSostituito> pezziSostituiti, String motivo) {
+		// TODO Auto-generated method stub
+		Intervento intervento = new Intervento(richiestaSelezionata, data, tipologia, esito);
+		for(PezzoSostituito p: pezziSostituiti) {
+			intervento.addPezzo(p);
+		}
+		
+		for(LineaIntervento t: richiestaSelezionata.getLineeIntervento()) {
+			for(Sportello s: dao.getListaSportelli()) {
+				if(s.getCod().equals(t.getIdSportello())) {
+					t.setSportello(s);
+				}
+			}
+		}
+		
+		System.out.println("*****Richiesta Selezionata**********");
+		richiestaSelezionata.print();
+			
+		if(intervento.getEsito().equalsIgnoreCase("risolto")) {
+			richiestaSelezionata.setStato("evasa");
+			for(LineaIntervento l: richiestaSelezionata.getLineeIntervento()) {
+				l.setStato("risolto");
+			}
+			System.out.println("*****Riepilogo Intervento**********");
+			intervento.print();
+			dao.registraIntervento(intervento);
+			dao.setRichiestaEvasa(richiestaSelezionata);
+		}
+		else {
+			System.out.println("*****Riepilogo Intervento**********");
+			intervento.print();
+			dao.registraInterventoNonRisolto(intervento, motivo);
+		}
+		
+	}
+
+	String motivo="";
+	
+	public ArrayList<RichiestaIntervento> getRichiesteInterventoManutenote(String nomeManuentore) {
+		return dao.getRichiesteInterventoManutenote(nomeManuentore);
+	}
 }
