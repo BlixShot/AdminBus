@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="652.0" prefWidth="963.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="it.furno.umberto.controller.ControllerIntervento">
+  <!-- TODO Add Nodes -->
+  <children>
+    <BorderPane layoutX="0.0" layoutY="0.0" prefHeight="652.0" prefWidth="963.0">
+      <right>
+        <HBox prefHeight="-1.0" prefWidth="963.0">
+          <children>
+            <VBox prefHeight="652.0" prefWidth="508.0">
+              <children>
+                <Label text="Seleziona la richiesta su cui si è intervenuti:">
+                  <font>
+                    <Font name="System Bold" size="18.0" fx:id="x3" />
+                  </font>
+                  <VBox.margin>
+                    <Insets bottom="10.0" left="10.0" top="10.0" />
+                  </VBox.margin>
+                </Label>
+                <ChoiceBox fx:id="choiceRichiesta" prefWidth="352.0">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="Item 1" />
+                      <String fx:value="Item 2" />
+                      <String fx:value="Item 3" />
+                    </FXCollections>
+                  </items>
+                  <VBox.margin>
+                    <Insets bottom="10.0" left="10.0" fx:id="x1" />
+                  </VBox.margin>
+                </ChoiceBox>
+                <Button fx:id="buttonOk" mnemonicParsing="false" onAction="#selezionaRichiesta" text="Seleziona">
+                  <VBox.margin>
+                    <Insets bottom="10.0" left="10.0" fx:id="x1" />
+                  </VBox.margin>
+                </Button>
+                <Label text="Dettagli richiesta" textFill="#cc0000">
+                  <VBox.margin>
+                    <Insets bottom="5.0" left="10.0" />
+                  </VBox.margin>
+                </Label>
+                <TableView fx:id="tableRichiesta" prefHeight="58.0" prefWidth="-1.0">
+                  <columns>
+                    <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="129.0" text="ID Richiesta" fx:id="colonnaId" />
+                    <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="155.0" text="Data Emissione" fx:id="colonnaData" />
+                    <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="100.0" text="Manutentore" fx:id="colonnaManutentore" />
+                    <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="102.0" text="Stato" fx:id="colonnaStato" />
+                  </columns>
+                  <VBox.margin>
+                    <Insets bottom="10.0" left="10.0" right="10.0" fx:id="x2" />
+                  </VBox.margin>
+                </TableView>
+                <Label text="Tabella sportelli a cui fa riferimento la richiesta" textFill="RED" VBox.margin="$x1" />
+                <TableView fx:id="tableLineeIntervento" prefHeight="200.0" prefWidth="200.0" VBox.margin="$x2">
+                  <columns>
+                    <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="187.0" text="ID Sportello" fx:id="colonnaIdSportello" />
+                    <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="299.0" text="Stato" fx:id="colonnaStatoSportello" />
+                  </columns>
+                </TableView>
+              </children>
+            </VBox>
+            <VBox prefHeight="652.0" prefWidth="448.0">
+              <children>
+                <Label font="$x3" text="Completa i seguenti campi">
+                  <VBox.margin>
+                    <Insets right="10.0" top="10.0" />
+                  </VBox.margin>
+                </Label>
+                <Label text="Data esecuzione (yyyy-mm-dd): ">
+                  <VBox.margin>
+                    <Insets top="20.0" fx:id="x4" />
+                  </VBox.margin>
+                </Label>
+                <TextField fx:id="textData" prefWidth="200.0" />
+                <Label text="Tipologia intervento (facoltativo): " VBox.margin="$x4" />
+                <TextField fx:id="textTipologia" prefWidth="200.0" />
+                <Label text="Pezzi usati e relative quantità:" VBox.margin="$x4" />
+                <HBox prefHeight="47.0" prefWidth="337.0">
+                  <children>
+                    <ChoiceBox fx:id="choicePezzi" prefWidth="155.0">
+                      <items>
+                        <FXCollections fx:factory="observableArrayList">
+                          <String fx:value="Item 1" />
+                          <String fx:value="Item 2" />
+                          <String fx:value="Item 3" />
+                        </FXCollections>
+                      </items>
+                    </ChoiceBox>
+                    <TextField fx:id="txtQuantita" prefWidth="56.0">
+                      <HBox.margin>
+                        <Insets left="10.0" />
+                      </HBox.margin>
+                    </TextField>
+                    <Button fx:id="buttonAggiungiPezzo" mnemonicParsing="false" onAction="#aggiungiPezzo" text="Aggiungi">
+                      <HBox.margin>
+                        <Insets left="30.0" />
+                      </HBox.margin>
+                    </Button>
+                  </children>
+                  <VBox.margin>
+                    <Insets top="5.0" />
+                  </VBox.margin>
+                </HBox>
+                <Label text="Malfunzionamento risolto?&#10;In caso sia risolto lo stato della richiesta di &#10;intervento di interesse  sarà settata ad &quot;evasa&quot;" VBox.margin="$x4" />
+                <HBox prefHeight="-1.0" prefWidth="200.0">
+                  <children>
+                    <Label text="Seleziona stato">
+                      <HBox.margin>
+                        <Insets right="20.0" />
+                      </HBox.margin>
+                    </Label>
+                    <ChoiceBox fx:id="choiseStato">
+                      <items>
+                        <FXCollections fx:factory="observableArrayList">
+                          <String fx:value="Item 1" />
+                          <String fx:value="Item 2" />
+                          <String fx:value="Item 3" />
+                        </FXCollections>
+                      </items>
+                    </ChoiceBox>
+                  </children>
+                  <VBox.margin>
+                    <Insets top="10.0" />
+                  </VBox.margin>
+                </HBox>
+                <Label text="In caso di intervento non risolto &#10;spiegarne il motivo:">
+                  <VBox.margin>
+                    <Insets top="10.0" />
+                  </VBox.margin>
+                </Label>
+                <TextArea fx:id="txtMotivo" prefHeight="76.0" prefWidth="408.0" wrapText="true" />
+                <Button fx:id="buttonRegistraInt" mnemonicParsing="false" onAction="#creaIntervento" text="Registra Intervento">
+                  <VBox.margin>
+                    <Insets top="30.0" />
+                  </VBox.margin>
+                </Button>
+              </children>
+              <padding>
+                <Insets left="40.0" />
+              </padding>
+            </VBox>
+          </children>
+        </HBox>
+      </right>
+    </BorderPane>
+  </children>
+</AnchorPane>
